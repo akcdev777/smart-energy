@@ -1,0 +1,21 @@
+grant codebase "file:../../../lib/jadeSecurity.jar" {
+	permission java.security.AllPermission;  };
+grant codebase "file:../../../../../lib/jade.jar" {
+	permission java.security.AllPermission;  };
+
+// --- Startup example ---
+// --- Policy on the remote container ---
+
+
+grant principal jade.security.Name "bob" {
+	permission jade.security.AgentPermission "", "create,kill";
+	permission jade.security.AgentPermission "", "suspend,resume";
+	permission jade.security.AMSPermission "", "register,deregister,modify";
+};
+
+grant principal jade.security.Name "*" {
+	permission jade.security.MessagePermission "", "send-to";
+};
+
+
+

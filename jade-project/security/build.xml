@@ -1,0 +1,304 @@
+<!--
+   build.xml file
+   for JADE Security Plug-in
+   to be used with 'ant':
+   http://jakarta.apache.org/ant/
+-->
+
+<project name="jade-s" default="compile" basedir=".">
+  <!-- set global properties for this build -->
+  <property name="version" value="3.10"/>
+  <property name="optimised-build" value="off"/>
+  <property name="debug-build" value="on"/>
+  <property name="jade-root" value="../.."/>
+  <property name="bc.jar" value="lib/bc/bcprov-jdk14.jar"/>
+      
+  <property name="src" value="src"/>
+  <property name="examples" value="examples"/>
+  <property name="classes" value="classes"/>
+  <property name="lib" value="lib"/>
+  <property name="doc" value="doc"/>
+
+
+
+<!-- ############ LEAP stuff. Is this really needed? ############ -->  
+  <property name="java-1.1-home" value="c:/Java/jdk1.1.8"/>
+  <property name="j2me-wtk-home" value="C:/Java/WTK21"/>
+  <property name="midp-version" value="1.0"/>
+  <property name="boot-midp-classes" value="${j2me-wtk-home}/lib/midpapi10.jar${path.separator}${j2me-wtk-home}/lib/cldcapi10.jar"/>
+  <!-- uncomment following property if you're using wtk<2.0 
+  <property name="boot-midp-classes" value="${j2me-wtk-home}/lib/midpapi.zip"/>
+  -->
+
+  <property name="leap-dir" value="../../leap"/>
+  <property file="${leap-dir}/buildLEAP.properties"/>
+
+
+  <property name="pjava-classes" value="pjava/classes"/>
+  <property name="pjava-src" value="pjava/src"/>
+  <property name="pjava-lib" value="pjava/lib"/>
+  <property name="leap-pjava" value="${jaderoot}/add-ons/leap/pjava/lib/JadeLeap.jar"/>
+  
+  <property name="midp-unverified" value="midp/unverified"/>
+  <property name="midp-classes" value="midp/classes"/>
+  <property name="leap-midp" value="${jaderoot}/add-ons/leap/midp/lib/JadeLeap.jar"/>
+  
+  <property name="boot-java-1.1-classes" value="${java-1.1-home}/lib/classes.zip"/>
+
+  <!-- Additional ANT tasks definition -->
+	<!-- Preprocessor -->
+	<taskdef name = "pproc"    classname="leapTools.Preprocessor">
+		<classpath path ="${leap-dir}/resources/antTasks/leapTools.jar"/>
+	</taskdef>
+	<!-- Minimizer -->
+	<taskdef name = "minimize"    classname="leapTools.Minimizer">
+		<classpath path ="${leap-dir}/resources/antTasks/leapTools.jar"/>
+	</taskdef>
+	<!-- Preverifier -->
+	<taskdef  name="preverify" classname="com.stampysoft.ant.j2me.PreverifyTask">
+  	<classpath path ="${leap-dir}/resources/antTasks/StampysoftAntTasks.jar" />
+	</taskdef>
+
+<!-- ############ END LEAP stuff. ############ -->  
+
+
+
+  <property name="jade-lib-dir" value="${jade-root}/lib"/>
+  <property name="jade-doc-dir" value="${jade-root}/doc"/>
+
+  <path id="jade-classes">
+    <fileset dir="${jade-lib-dir}">
+      <include name="commons-codec/commons-codec-1.3.jar"/>
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+  
+
+  <target name="all" depends="lib,examples.lib" description="Compile everything and create jar" />
+  
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the directories structure used to store files -->
+    <mkdir dir="${classes}"/>
+  </target>
+
+  <!-- Compile the javadoc code from ${src} into ${doc} -->
+  <target name="doc" depends="init" description="Make javadoc from source code.">
+    <echo>--- Creating javadoc files ---</echo>
+    <mkdir dir="${doc}/api"/>
+    <javadoc sourcepath="${src}" 
+             packagenames="
+    		jade.core.security, jade.core.security.authentication, jade.core.security.authentication, 
+    		jade.core.security.permission, jade.core.security.signature, jade.core.security.encryption, 
+    		jade.security, jade.security.impl, jade.security.util, jade.security.util.DES, 
+    		jade.core, jade.imtp.rmi, jade.domain.FIPAAgentManagement"
+             destdir="${doc}/api"
+             author="true" windowtitle="JADE Security Plug-in">
+      <classpath>
+        <pathelement location="${classes}"/>
+        <path refid="jade-classes"/>
+      </classpath>
+    </javadoc>
+  </target>
+
+
+  <!-- Compile the security add-on -->
+  <target name="compile" depends="init" description="Compile JADE security add-on classes.">
+  <echo>--- Compiling JADE Security ---</echo>
+    <javac srcdir="${src}" 
+           destdir="${classes}" 
+           debug="${debug-build}" 
+           debuglevel="lines,vars,source" 
+           optimize="${optimised-build}" 
+           deprecation="on" 
+           includes="jade/**">
+      <compilerarg value="-source" />
+      <compilerarg value="1.4" />
+      
+      <classpath>
+        <pathelement path="${bc.jar}"/>
+        <path refid="jade-classes"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <!-- Compile the examples  -->
+  <target name="examples" depends="compile" description="Compile JADE-S examples.">
+    <echo>--- Compiling examples ---</echo>
+    <javac srcdir="${examples}" destdir="${classes}" debug="${debug-build}" optimize="${optimised-build}" deprecation="on">
+      <classpath>
+        <pathelement location="${classes}"/>
+        <path refid="jade-classes"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <!-- Create the secirity add-on jar file in ${lib} -->
+  <target name="lib" depends="compile" description="Create '.jar' file in the lib/ directory. ">
+    <echo>--- Creating jadeSecurity.jar ---</echo>
+    <jar jarFile="${lib}/jadeSecurity.jar" basedir="${classes}" includes="jade/**"/> 
+  </target>
+
+
+  <!-- Create the examples jar file in ${lib} -->
+  <target name="examples.lib" depends="examples" description="Create 'examples.jar' file in the lib/ directory. ">
+    <echo>--- Creating examples.jar ---</echo>
+    <jar jarFile="${lib}/examples.jar" basedir="${classes}" includes="messaging/**,exitAgent/**"/>
+  </target>
+
+  <!-- Clean all the class files created -->
+  <target name="clean-classes" description="clean up the .class files.">
+    <!-- Delete the ${classes} directory tree -->
+    <delete includeEmptyDirs="true" quiet="true">
+      <fileset dir="${classes}" excludes="*.mf"/>
+    </delete>
+  </target>
+
+  <!-- Clean all the txt files generated by JADE in the examples -->
+  <target name="clean-txt" description="Clean all the txt files generated by JADE in the examples.">
+    <delete includeEmptyDirs="true" quiet="true">
+      <fileset dir="${examples}" includes="**/APDescription.txt,**/MTPs-*.txt"/>
+    </delete>
+  </target>
+
+
+  <!-- Clean all the jar files into lib/ -->
+  <target name="clean-jar" description="Clean all the jar files.">
+    <delete includeEmptyDirs="true" quiet="true">
+      <fileset dir="${lib}" includes="jadeSecurity.jar,examples.jar"/>
+    </delete>
+  </target>
+
+  <target name="clean" depends="clean-jar,clean-txt,clean-classes" description="Clean up both classes and txt files. "/>
+
+
+  <!-- Make distribution zip file -->
+  <target name="dist" depends="clean, doc, lib, examples.lib">
+    <echo message="GENERATE THE PDF FORM OF THE JADE_Security GUIDE, PUT IT IN THE LOCAL DIRECTORY (jade/add-ons/security) AND THEN PRESS ENTER -->"/>
+    <input/>
+    <mkdir dir="${jade-doc-dir}"/>
+    <mkdir dir="${jade-doc-dir}/tutorials"/>
+    <copy file="JADE_Security.pdf" todir="${jade-doc-dir}/tutorials"/>
+    <zip zipfile="../securityAddOn-${version}.zip" basedir="../..">
+      <include name="add-ons/security/*"/>
+      <exclude name="add-ons/security/JADE_Security.*"/>
+      <include name="add-ons/security/src/**"/>
+      <include name="add-ons/security/examples/**"/>
+      <include name="add-ons/security/doc/**"/>
+      <include name="add-ons/security/lib/**"/>
+      <include name="doc/tutorials/JADE_Security.pdf"/>
+    </zip>
+  </target>
+
+
+
+
+  <!-- ####################### Other LEAP related stuff ################# --> 
+
+  <!-- PJAVA -->
+  <target name="init-pjava">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the directories structure used to store files -->
+    <mkdir dir="${pjava-classes}"/>
+  </target>
+
+  <target name="compile-pjava" depends="init-pjava" description="Compile JADE security add-on classes.">
+  <echo>--- Compiling JADE Security for PJava---</echo>
+    <!-- 1) Copy JADE-S sources -->
+	  <copy todir="${pjava-src}" overwrite="yes">
+			<fileset dir="${src}">
+				<exclude name="**/jade/imtp/rmi/**"/>
+			</fileset>
+		</copy>
+	  <!-- 2) Preprocess the whole -->
+		<pproc basedir="${pjava-src}" type="pjava"/>
+    
+    <!-- classpath="${classpath}" -->
+     <javac srcdir="${pjava-src}" destdir="${pjava-classes}" 
+        nowarn="off" target="1.4" optimize="${javac.optimize}" debug="${javac.debug}" 
+        deprecation="on" excludes="test/**">
+      <classpath>
+        <fileset dir="${jade-root}/leap/pjava/lib" includes="*.jar"/>
+      </classpath>
+    </javac>     
+  </target>
+ 
+  <!-- Make the jar file in ${lib} -->
+  <target name="pjava" depends="compile-pjava" description="Create '.jar' file in the lib/ directory. ">
+    <echo>--- Creating JadeSecurity.jar for PJava ---</echo>
+    <mkdir dir="${pjava-lib}"/>
+    <jar jarFile="${pjava-lib}/jadeSecurity.jar" 
+                 basedir="${pjava-classes}" 
+		 includes="jade/**" 
+		 excludes=""/>
+  </target>
+
+  
+  <!-- MIDP -->
+    <target name="init-midp">
+      <!-- Create the time stamp -->
+      <tstamp/>
+      <!-- Create the directories structure used to store files -->
+      <mkdir dir="${midp-classes}"/>
+    </target>
+
+	<target name="midp" depends="init-midp"
+	        description="Build jadeSecurity for MIDP">
+		<delete dir = "${midp-unverified}" quiet="true"/>
+		<delete dir = "${midp-classes}" quiet="true"/>
+		<mkdir dir="${midp-unverified}"/>
+		<mkdir dir="${midp-classes}"/>
+			  
+		<javac srcdir="${src}"
+		       destdir="${midp-unverified}"
+		       classpath="${leap-midp}"
+		       optimize="${optimised-build}"
+		       deprecation="off"
+		       bootclasspath="${boot-midp-classes}"
+		       target="1.1"
+                       includes="jade/**"
+                       excludes=""/>
+		       
+		<preverify unverified="${midp-unverified}" verified="${midp-classes}" classpath="${leap-midp}"/>		
+	  
+		<copy todir="${midp-classes}">
+			<fileset dir="${leap-midp}">
+			</fileset>
+		</copy>
+		
+		<delete file="${lib}/jadeSecurity-midp.jar" quiet="true"/>
+		<jar jarfile="${lib}/jadeSecurity-midp.jar" basedir="${midp-classes}" manifest="${midp}/jade-s-midp.manifest"/>
+	</target>
+
+
+  <!-- Create the zip file -->
+  <target name="zip">
+    <zip zipfile="../../jadesecurity.zip" 
+         basedir="../../../" 
+	 	 includes="jade/add-ons/security/**" 
+		 excludes="jade/add-ons/security/*.zip,jade/add-ons/security/${doc}/api/**,jade/add-ons/security/src/test/**"/>
+  </target>
+
+
+  <!-- targets useful when developing -->
+  <target name="lib-all">
+    <!--  call lib on jade -->
+    <echo message="--- Generating jade jar files... ---" />
+    <ant dir="../../" target="clean" />
+    <ant dir="../../" target="lib" />
+    <echo message="--- Generating jade-s jar files... ---" />
+    <antcall target="lib" />
+    <antcall target="examples.jar" />
+  </target>
+  <target name="compile-all">
+    <echo message="--- Compiling jade classes... ---" />
+    <ant dir="../../" target="jade" />
+    <echo message="--- Compiling jade-s classes and examples... ---" />
+    <antcall target="compile" />
+    <antcall target="examples" />
+  </target>
+  
+</project>

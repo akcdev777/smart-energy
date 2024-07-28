@@ -1,0 +1,8 @@
+
+
+
+grant principal jade.security.util.LocalName "jade" {
+	permission jade.security.impl.ContainerPermission "", "create";
+};
+
+

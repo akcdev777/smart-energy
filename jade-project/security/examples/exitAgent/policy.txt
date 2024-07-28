@@ -1,0 +1,24 @@
+
+//
+//   ExitAgent example
+//   -----------------
+//
+
+// JADE code is allowed all permissions.
+grant codebase "file:../../lib/jadeSecurity.jar" {
+      permission java.security.AllPermission;  };
+grant codebase "file:../../../../lib/jade.jar" {
+      permission java.security.AllPermission;  };
+
+// Note that examples agent code is not allowed any permission.
+
+
+
+grant principal jade.security.Name "*" {
+  permission jade.security.PlatformPermission "", "create,kill";
+  permission jade.security.ContainerPermission "", "create,kill";
+  permission jade.security.AgentPermission "", "create,kill";
+  permission jade.security.AMSPermission   "", "register,deregister,modify";
+  permission jade.security.MessagePermission "", "send-to";
+};
+

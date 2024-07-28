@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Test template
+<Test name="" skip="false">
+<TestClassName>test.security.SecurityTest</TestClassName>
+<Argument key="" value=""></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives a message before the expiration of the timeout</WhenTestPass>
+</Test>	
+-->
+
+<TestsList> 
+<Test name="Unsecure message test" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<WhatTest>Test the sending of an unsecure message when security services are plugged</WhatTest>
+<HowWorkTest>A remote agent sends a message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives a message before the expiration of the timeout</WhenTestPass>
+</Test>		
+<!-- Signature tests -->
+<Test name="Signature test (default algorithm)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<WhatTest>Test signature with default signature algorithm</WhatTest>
+<HowWorkTest>A remote agent sends a signed message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the signature</WhenTestPass>
+</Test>	
+<Test name="Signature test (custom algorithm)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<Argument key="sign-algo" value="MD5withRSA"></Argument>
+<WhatTest>Test signature with a custom signature algorithm supported by sender and receiver</WhatTest>
+<HowWorkTest>A remote agent sends a signed message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the signature</WhenTestPass>
+</Test>
+<Test name="Signature test (wrong algorithm)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<Argument key="sign-algo" value="DSA"></Argument>
+<Argument key="pass" value="false">This test passes when it fails</Argument>
+<WhatTest>Test signature with a custom signature algorithm that is not compatible with the key pair</WhatTest>
+<HowWorkTest>A remote agent tries to send a signed message to the tester agent</HowWorkTest>
+<WhenTestPass>An exception occurs on sender side and the receiver timeout expires</WhenTestPass>
+</Test>
+<Test name="Signature test (unsupported algorithm for sender)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<Argument key="sign-algo" value="XXX"></Argument>
+<Argument key="pass" value="false">This test passes when it fails</Argument>
+<WhatTest>Test signature with signature algorithm that is not supported by sender</WhatTest>
+<HowWorkTest>A remote agent tries to send a signed message to the tester agent</HowWorkTest>
+<WhenTestPass>An exception occurs on sender side and the receiver timeout expires</WhenTestPass>
+</Test>	
+
+<!-- Encryption tests -->
+<Test name="Encryption test (default algorithm)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<WhatTest>Test encryption of a message with the default algorithms</WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the decrypted content</WhenTestPass>
+</Test>	
+<Test name="Encryption test (custom algorithm)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="sym-algo" value="DESede"></Argument>
+<Argument key="sym-size" value="168"></Argument>
+<WhatTest>Test encryption of a message with a user-defined symmetric algorithm</WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the decrypted content</WhenTestPass>
+</Test>	
+<Test name="Encryption test (custom key size)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="sym-size" value="256"></Argument>
+<Argument key="sym-algo" value="AES"></Argument>
+<WhatTest>Test encryption with a valid custom key size</WhatTest>
+<HowWorkTest>Test encryption of a message with a valid key size</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the decrypted content</WhenTestPass>
+</Test>
+<Test name="Encryption test (non-valid key size)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="sym-size" value="100"></Argument>
+<Argument key="sym-algo" value="AES"></Argument>
+<Argument key="pass" value="false">This test is meant to fail</Argument>
+<WhatTest>Test encryption with an incorrect key size</WhatTest>
+<HowWorkTest>Test encryption of a message with a user-defined symmetric algorithm</HowWorkTest>
+<WhenTestPass>Since the key size is incorrect, an exception occurs on the sender side</WhenTestPass>
+</Test>
+<Test name="Encryption test (unsupported symmetric algorithm, sender side)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="sym-algo" value="XXX"></Argument>
+<Argument key="pass" value="false">This test is meant to fail</Argument>
+<WhatTest>Test encryption of a message with a user-defined symmetric algorithm</WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the decrypted content</WhenTestPass>
+</Test>	
+<Test name="Encryption test (unknown receiver public key)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="public-key" value="false"></Argument>
+<Argument key="pass" value="false">This test is meant to fail</Argument>
+<WhatTest>Test encryption of a message when receiver public key is unknown</WhatTest>
+<HowWorkTest>A remote agent tries to send an encrypted message to the tester agent</HowWorkTest>
+<WhenTestPass>Since the public key is unknown an exception occurs on the sender side</WhenTestPass>
+</Test>	
+
+<!-- Signature and encryption tests -->
+<Test name="Signature and encryption test (default algorithms)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<WhatTest>Test signature and encryption of a message with the default algorithms</WhatTest>
+<HowWorkTest>A remote agent sends a signed and encrypted message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the decrypted content and the signature</WhenTestPass>
+</Test>	
+<Test name="Signature and encryption test (custom algorithms)" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="sign-algo" value="MD5withRSA"></Argument>
+<Argument key="sym-algo" value="DESede"></Argument>
+<Argument key="sym-size" value="168"></Argument>
+<WhatTest>Test signature and encryption of a message with the default algorithms</WhatTest>
+<HowWorkTest>A remote agent sends a signed and encrypted message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives the message before the expiration of the timeout and is able to check the decrypted content and the signature</WhenTestPass>
+</Test>	
+
+<!-- Credentials tests -->
+<Test name="Credentials test" skip="false">
+<TestClassName>test.security.messaging.CredentialsTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<WhatTest>Test inclusion of credentials within an ACLMessage</WhatTest>
+<HowWorkTest>A remote agent sends a message that contains credentials</HowWorkTest>
+<WhenTestPass>The tester agent is able to decode the credentials</WhenTestPass>
+</Test> 
+<Test name="Credentials test (encrypted)" skip="false">
+<TestClassName>test.security.messaging.CredentialsTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="encrypt" value="true"></Argument>
+<WhatTest>Test inclusion of credentials within an encrypted ACLMessage</WhatTest>
+<HowWorkTest>A remote agent sends an encrypted  message that contains credentials</HowWorkTest>
+<WhenTestPass>The tester agent is able to decrypt the message and decode the credentials</WhenTestPass>
+</Test> 
+
+<!-- Future tests not supported yet -->
+<Test name="Signature test (unsupported algorithm for receiver)" skip="true">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<Argument key="sign" value="true"></Argument>
+<Argument key="sign-algo" value="DSA"></Argument>
+<Argument key="pass" value="false">This test passes when it fails</Argument>
+<WhatTest>Test signature with signature algorithm that is not supported by sender</WhatTest>
+<HowWorkTest>A remote agent tries to send a signed message to the tester agent</HowWorkTest>
+<WhenTestPass>An exception occurs on sender side and the receiver timeout expires</WhenTestPass>
+</Test>	
+<Test name="Encryption test (unsupported symmetric algorithm, receiver side)" skip="true">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest></HowWorkTest>
+<WhenTestPass></WhenTestPass>
+</Test>	
+<Test name="Encryption test (unsupported asymmetric algorithm, sender side)" skip="true">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="config" value="platform"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest></HowWorkTest>
+<WhenTestPass></WhenTestPass>
+</Test>	
+<!-- End future tests not supported yet -->
+
+</TestsList>

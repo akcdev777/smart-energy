@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Test template
+<Test name="" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="" value=""></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives a message before the expiration of the timeout</WhenTestPass>
+</Test>	
+-->
+
+<TestsList> 
+<!-- Permission tests -->
+
+
+<!-- Container creation -->
+<Test name="Starting a Main-Container having permission to do so." skip="false">
+ <TestClassName>
+	test.security.permission.ContainerCreateTest
+ </TestClassName>
+ <Argument key="conf-main" value="src/test/security/permission/conf/alice-main-ok.conf"></Argument>
+ <Argument key="policy-main" value="src/test/security/permission/conf/alice-main-ok.policy"></Argument>
+ <Argument key="shouldSucceed" value="true"></Argument>
+ <WhatTest>
+	Starting a main container as an user who authenticates correclty, 
+	but DOES HAVE the permission to do so (no ContainerPermission 'create' into the policy).
+ </WhatTest>
+ <HowWorkTest>
+	A main container is started with appropriate conf and policy. 
+ </HowWorkTest>
+ <WhenTestPass>
+        Test passes, when the main container starts correctly.
+ </WhenTestPass>
+</Test>
+
+<Test name="Starting a Main-Container without having permission to do so." skip="false">
+ <TestClassName>
+	test.security.permission.ContainerCreateTest
+ </TestClassName>
+ <Argument key="conf-main" value="src/test/security/permission/conf/alice-main-ok.conf"></Argument>
+ <Argument key="policy-main" value="src/test/security/permission/conf/alice-main-not-container-create.policy"></Argument>
+ <Argument key="shouldSucceed" value="false"></Argument>
+ <WhatTest>
+	Starting a main container as an user who authenticates correclty, 
+	and DOES NOT HAVE the permission to do so (there is ContainerPermission 'create' into the policy).
+ </WhatTest>
+ <HowWorkTest>
+	A main container is started with appropriate conf and policy. 
+ </HowWorkTest>
+ <WhenTestPass>
+        Test passes, when the main container fails in starting.
+ </WhenTestPass>
+</Test>
+
+
+
+
+
+
+<!-- Agent Creation 1 -->
+<Test name="Authorized user creates a new agent. (permission on both containers)" skip="false">
+ <TestClassName>
+	test.security.permission.AgentCreateTest1
+ </TestClassName>
+ <Argument key="conf-main" value="src/test/security/permission/conf/main-nouser-nopolicy.conf"></Argument>
+ <Argument key="policy-main" value="src/test/security/permission/conf/agent-create-1-1-main-policy.txt"></Argument>
+ <Argument key="conf-cont1" value="src/test/security/permission/conf/cont-nouser-nopolicy.conf"></Argument>
+ <Argument key="policy-cont1" value="src/test/security/permission/conf/agent-create-1-1-cont1-policy.txt"></Argument>
+ <Argument key="shouldSucceed" value="true"></Argument>
+ <WhatTest>
+	The permission of a user to create an agent.
+ </WhatTest>
+ <HowWorkTest>
+	A main container is started with user alice.
+        A remote container is started with user bob, with start-up agent a DummeAgent.
+ </HowWorkTest>
+ <WhenTestPass>
+        Test passes, when the agent is successfully created.
+ </WhenTestPass>
+</Test>
+
+<Test name="Unauthorized user tries to create a new agent. (no permission on main container)" skip="false">
+ <TestClassName>
+	test.security.permission.AgentCreateTest1
+ </TestClassName>
+ <Argument key="conf-main" value="src/test/security/permission/conf/main-nouser-nopolicy.conf"></Argument>
+ <Argument key="policy-main" value="src/test/security/permission/conf/agent-create-1-2-main-policy.txt"></Argument>
+ <Argument key="conf-cont1" value="src/test/security/permission/conf/cont-nouser-nopolicy.conf"></Argument>
+ <Argument key="policy-cont1" value="src/test/security/permission/conf/agent-create-1-1-cont1-policy.txt"></Argument>
+ <Argument key="shouldSucceed" value="false"></Argument>
+ <WhatTest>
+	The permission of a user to create an agent.
+ </WhatTest>
+ <HowWorkTest>
+	A main container is started with user alice.
+        A remote container is started with user bob, with start-up agent a DummeAgent.
+        The plicy on the main container, bob does not have the permission to 
+	create any agent.
+ </HowWorkTest>
+ <WhenTestPass>
+        Test passes, when the agent is NOT successfully created.
+ </WhenTestPass>
+</Test>
+
+<Test name="Unauthorized user tries to create a new agent. (no permission on remote container)" skip="false">
+ <TestClassName>
+	test.security.permission.AgentCreateTest1
+ </TestClassName>
+ <Argument key="conf-main" value="src/test/security/permission/conf/main-nouser-nopolicy.conf"></Argument>
+ <Argument key="policy-main" value="src/test/security/permission/conf/agent-create-1-1-main-policy.txt"></Argument>
+ <Argument key="conf-cont1" value="src/test/security/permission/conf/cont-nouser-nopolicy.conf"></Argument>
+ <Argument key="policy-cont1" value="src/test/security/permission/conf/agent-create-1-3-cont1-policy.txt"></Argument>
+ <Argument key="shouldSucceed" value="false"></Argument>
+ <WhatTest>
+	The permission of a user to create an agent.
+ </WhatTest>
+ <HowWorkTest>
+	A main container is started with user alice.
+        A remote container is started with user bob, with start-up agent a DummeAgent.
+        The plicy on the container cont-1, bob does not have the permission to 
+	create any agent.
+ </HowWorkTest>
+ <WhenTestPass>
+        Test passes, when the agent is NOT successfully created.
+ </WhenTestPass>
+</Test>
+
+
+
+
+
+
+</TestsList>

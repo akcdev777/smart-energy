@@ -1,0 +1,8 @@
+test.common
+test.common.agentConfigurationOntology
+test.common.behaviours
+test.common.remote
+test.common.testSuite
+test.common.testSuite.gui
+test.common.testerAgentControlOntology
+test.common.xml

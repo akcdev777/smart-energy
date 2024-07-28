@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Test template
+<Test name="" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="" value=""></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives a message before the expiration of the timeout</WhenTestPass>
+</Test>	
+-->
+
+<TestsList> 
+	<!-- Authentication and authorization tests -->
+	<Test name="Stating main container with successcul authentication." skip="false">
+		<TestClassName>
+			test.security.authentication.AuthenticationTest
+		</TestClassName>
+		<Argument key="configFilesPath" value="src/test/security/authentication/conf/"></Argument>
+		<Argument key="configFile" value="auth_1.conf"></Argument>
+		<Argument key="action" value="startMainContainer"></Argument>
+		<Argument key="authenticationKind" value="successfulAuthentication"></Argument>
+		<WhatTest>
+			Tests the authentication of a user while starting a new main container.
+		</WhatTest>
+		<HowWorkTest>
+			While starting a new main container, correct user name and password is submitted.
+		</HowWorkTest>
+		<WhenTestPass>
+			Test passes, when the main container starts, and fails, when the main container does not start.
+		</WhenTestPass>
+	</Test>	
+	
+	<Test name="Stating main container with unsuccesscul authentication." skip="false">
+		<TestClassName>
+			test.security.authentication.AuthenticationTest
+		</TestClassName>
+		<Argument key="configFilesPath" value="src/test/security/authentication/conf/"></Argument>
+		<Argument key="configFile" value="auth_2.conf"></Argument>
+		<Argument key="action" value="startMainContainer"></Argument>
+		<Argument key="authenticationKind" value="unsuccessfulAuthentication"></Argument>
+		<WhatTest>
+			Tests the authentication of a user while starting a new main container.
+		</WhatTest>
+		<HowWorkTest>
+			While starting a new main container, incorrect user name or password is submitted.
+		</HowWorkTest>
+		<WhenTestPass>
+			Test passes, when the main container does not start, and fails, when the main container starts.
+		</WhenTestPass>
+	</Test>	
+	
+
+	
+		
+
+</TestsList>

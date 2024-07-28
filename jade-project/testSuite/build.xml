@@ -1,0 +1,145 @@
+<!-- ANT BUILD FILE FOR THE JADE TEST SUITE -->
+
+<!-- set properties for this project -->
+<project name="testsuite" default="run" basedir=".">
+  <description>Test Suite build file</description>
+  
+  <property environment="env"/>
+  <property name="jade-home" value="../.."/>
+  <property name="version" value="1.14"/>
+
+  <property name="src" value="src"/>
+  <property name="classes" value="classes"/>
+  <property name="lib" value="lib"/>
+  <property name="doc" value="doc"/>
+  <property name="jade-lib-dir" value="${jade-home}/lib"/>
+  <property name="jade-doc-dir" value="${jade-home}/doc"/>
+
+
+  <path id="jade-classes">
+    <fileset dir="${jade-lib-dir}">
+      <include name="commons-codec/commons-codec-1.3.jar"/>
+      <include name="*.jar"/>
+    </fileset>
+  </path>
+
+
+  
+  <!--   _______________________________________________
+                               init
+         _______________________________________________ -->
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <mkdir dir="${classes}"/>
+    <mkdir dir="${lib}"/>
+  </target>
+
+
+  <!--   _______________________________________________
+                               doc
+         _______________________________________________ -->
+  <!-- Compile the javadoc code from ${src} into ${doc} -->
+  <target name="doc" depends="init" description="generate javadoc documentation">
+    <mkdir dir="${doc}/api"/>
+    <javadoc destdir="${doc}/api" author="true" windowtitle="JADE TestSuite" sourcepath="${src}" packagenames="test.common.*, test.common.testSuite.*, test.common.remote.*, test.common.xml.*">
+      <classpath>
+        <path refid="jade-classes"/>
+      </classpath>
+    </javadoc>
+  </target>
+
+
+  <!--   _______________________________________________
+                               compile
+         _______________________________________________ -->
+  <target name="compile" depends="init" description="compile the tests">
+  	
+    <!-- Compile the java code source files -->
+    <javac srcdir="${src}" destdir="${classes}" optimize="on" deprecation="off" target="1.5" source="1.5">
+      <classpath refid="jade-classes"/>
+    </javac>
+  				
+    <!-- RMIC the TSDaemon -->
+    <rmic classname="test.common.remote.TSDaemon" base="${classes}">
+      <classpath>
+        <pathelement location="{classes}"/>
+        <path refid="jade-classes"/>
+      </classpath>
+    </rmic>
+
+    
+    <!-- Copy images, xml and properties configuration files -->
+    <copy todir="${classes}">
+      <fileset dir="${src}">
+        <include name="**/*.xml"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.gif"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.png"/>
+      </fileset>
+    </copy>
+  </target>
+
+
+  <!--  __________________________________________________
+                            lib
+        __________________________________________________ -->
+  <target name="lib" depends="compile" description="create the test suite jar file">
+    <delete file="${lib}/testSuite.jar" quiet="true"/>
+    <jar jarfile="${lib}/testSuite.jar">
+      <fileset dir="${classes}"/>
+    </jar>
+  </target>
+
+  
+  <!--  __________________________________________________
+                            clean
+        __________________________________________________ -->
+  <target name="clean" description="clean up">
+    <!-- Delete the classes directory tree -->
+    <delete includeEmptyDirs="true" quiet="true">
+      <fileset dir="${classes}"/>
+    </delete>
+  </target>
+
+
+
+  <!--  __________________________________________________
+                            run
+        __________________________________________________ -->
+  <target name="run" description="run the test suite" depends="lib">
+    <java classname="jade.Boot" fork="true">
+      <classpath>
+        <pathelement path="${lib}/testSuite.jar"/>
+        <path refid="jade-classes"/>
+        <path location="."/>
+      </classpath>
+      <arg line="-gui testSuite:test.common.testSuite.TestSuiteAgent(testerList.xml)"/>
+    </java>
+  </target>
+
+
+  <!--  __________________________________________________
+                            dist
+        __________________________________________________ -->
+  <target name="dist" depends="clean, doc, lib" description="create the distribution file">
+    <echo message="GENERATE THE PDF FORM OF THE JADE_TestSuite TUTORIAL, PUT IT IN THE LOCAL DIRECTORY (jade/add-ons/testSuite) AND THEN PRESS ENTER -->"/>
+    <input/>
+    <mkdir dir="${jade-doc-dir}"/>
+    <mkdir dir="${jade-doc-dir}/tutorials"/>
+    <copy file="JADE_TestSuite.pdf" todir="${jade-doc-dir}/tutorials"/>
+    <jar destfile="../testSuiteAddOn-${version}.zip" basedir="${jade-home}">
+      <include name="add-ons/testSuite/COPYING"/>
+      <include name="add-ons/testSuite/ChangeLog"/>
+      <include name="add-ons/testSuite/License"/>
+      <include name="add-ons/testSuite/build.xml"/>
+      <include name="add-ons/testSuite/testerList.xml"/>
+      <include name="add-ons/testSuite/src/**"/>
+      <include name="add-ons/testSuite/doc/api/**"/>
+      <include name="add-ons/testSuite/lib/**"/>
+      <include name="doc/tutorials/JADE_TestSuite.pdf"/>
+    </jar>
+  </target>
+
+</project>

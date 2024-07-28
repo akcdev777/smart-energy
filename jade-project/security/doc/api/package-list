@@ -1,0 +1,11 @@
+jade.core.security
+jade.core.security.authentication
+jade.core.security.encryption
+jade.core.security.permission
+jade.core.security.signature
+jade.domain.FIPAAgentManagement
+jade.imtp.rmi
+jade.security
+jade.security.impl
+jade.security.util
+jade.security.util.DES

@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+	<!DOCTYPE TesterList [
+		<!ELEMENT TesterList (Tester)*>
+		<!ELEMENT Tester (ClassName, Description, TestsListRif)>
+		<!ATTLIST Tester 
+		    name     CDATA    #REQUIRED
+		    skip     CDATA    #REQUIRED
+		>
+		<!ELEMENT ClassName (#PCDATA)>
+		<!ELEMENT Description (#PCDATA)>
+		<!ELEMENT TestsListRif (#PCDATA)>
+	]>
+<TesterList>
+
+
+<!--			AUTHENTICATIONTESTS (START)			-->
+<Tester name="Authentication tests." skip="false">
+	<ClassName>test.security.authentication.AuthenticationTesterAgent</ClassName>
+	<Description>Tests the authentication and authorization functionality.</Description>
+	<TestsListRif>test/security/authentication/authenticationTestsList.xml</TestsListRif>
+</Tester>
+<!--			AUTHENTICATION TESTS (END)			-->
+
+  <Tester name="Permission tests." skip="false">
+    <ClassName>test.security.permission.PermissionTesterAgent</ClassName>
+    <Description>Tests the authorization functionality.</Description>
+    <TestsListRif>test/security/permission/permissionTestsList.xml</TestsListRif>
+  </Tester>
+
+
+  <Tester name="Signature and encryption services tests (local)" skip="false">
+  <ClassName>test.security.messaging.SecurityTesterAgent</ClassName>
+  <Description>Tests the message signature and encryption functionality</Description>
+  <!-- This does not seem to be taken into account -->
+  <TestsListRif>test/security/messaging/securityTestsList.xml</TestsListRif>
+  </Tester>
+  <Tester name="Signature and encryption services tests (platform)" skip="false">
+  <ClassName>test.security.messaging.PlatformSecurityTesterAgent</ClassName>
+  <Description>Tests the message signature and encryption functionality</Description>
+  <!-- This does not seem to be taken into account -->
+  <TestsListRif>test/security/messaging/platformSecurityTestsList.xml</TestsListRif>
+  </Tester>
+  <Tester name="Signature and encryption services tests (remote)" skip="false">
+  <ClassName>test.security.messaging.RemoteSecurityTesterAgent</ClassName>
+  <Description>Tests the message signature and encryption functionality</Description>
+  <!-- This does not seem to be taken into account -->
+  <TestsListRif>test/security/messaging/remoteSecurityTestsList.xml</TestsListRif>
+  </Tester>
+  <Tester name="Security hack tests (always on platform)" skip="false">
+  <ClassName>test.security.messaging.PlatformHackerAgent</ClassName>
+  <Description>Tests several attacks attempts on the signature and encryption services</Description>
+  <!-- This does not seem to be taken into account -->
+  <TestsListRif>test/security/messaging/hackTestsList.xml</TestsListRif>
+  </Tester>
+</TesterList>

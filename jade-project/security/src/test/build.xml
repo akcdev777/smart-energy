@@ -1,0 +1,113 @@
+<!-- ANT BUILD FILE FOR THE SECURITY TEST SUITE -->
+
+<!-- set properties for this project -->
+<project name="testsuite" default="compile" basedir="../..">
+  <description>Security Test Suite build file</description>
+  <property name="version" value="1.0"/>
+
+  <property environment="env"/>
+  <path id="project.class.path">
+    <!-- jadeSecurity classes -->
+    <pathelement location="classes"/>
+    <!-- JADE and JADE TestSuite  classes -->
+    <pathelement location="../../classes"/>
+    <pathelement location="lib/bc/bcprov-jdk14.jar"/>
+  </path>
+
+
+
+
+  <!--   _______________________________________________
+                               init
+         _______________________________________________ -->
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+  </target>
+
+
+  <!--   _______________________________________________
+                               compile
+         _______________________________________________ -->
+  <target name="compile" depends="init" description="compile the tests">
+  	
+  	<!-- Compile the java code source files -->
+  	<javac srcdir="src/test" 
+  	       destdir="classes" 
+  	       optimize="off" 
+             debug="on"
+  	       deprecation="off">
+  	  <classpath refid="project.class.path"/>
+   	</javac>
+  				
+    
+    <!-- Copy xml configuration files -->
+    <copy file="src/test/securityTester.xml" todir="classes/test/"/>
+    <copy todir="classes/test/security/messaging">
+      <fileset dir="src/test/security/messaging">
+        <include name="*.xml"/>
+      </fileset>
+    </copy>
+	
+    <copy todir="classes/test/security/authentication">
+      <fileset dir="src/test/security/authentication">
+	<include name="*.xml"/>
+	<include name="*.conf"/>
+	<include name="*.policy"/>
+      </fileset>
+    </copy>
+
+    <copy todir="classes/test/security/permission">
+      <fileset dir="src/test/security/permission">
+	<include name="*.xml"/>
+	<include name="*.conf"/>
+	<include name="*.policy"/>
+      </fileset>
+    </copy>
+
+
+  </target>
+
+
+
+  <!--  __________________________________________________
+                            clean
+        __________________________________________________ -->
+  <target name="clean" description="clean up">
+    <!-- Delete the ${build} directory tree -->
+    <delete includeEmptyDirs="true">
+      <fileset dir="classes/test"/>
+    </delete>
+  </target>
+
+
+
+<!--  __________________________________________________
+                            run security test suite
+        __________________________________________________ -->
+  <target name="run" description="run the test suite" depends="compile">
+   <!--<java classname="test.common.testSuite.TestSuiteAgent" fork="true">-->
+   <java classname="test.security.SecurityTestSuite" fork="true">
+  	  <classpath refid="project.class.path"/>
+   </java>
+
+  </target>
+
+
+
+
+
+  <!-- useful for developers -->
+  <target name="compile-all" description="Create classes of: Jade, jade test-suite, Jade-S, and the security test-suite." >
+    <echo message="--- Compiling jade classes... ---" />
+    <ant dir="../../" target="jade" />
+    <echo message="--- Compiling jade test-suite classes... ---" />
+    <ant dir="../../" antfile="src/test/build.xml" target="compile"  />
+    <echo message="--- Compiling jade-s classes... ---" />
+    <ant dir="./" target="compile" />
+    <echo message="--- Compiling security test suite classes... ---" />
+    <antcall target="compile" />
+  </target>
+
+
+</project>

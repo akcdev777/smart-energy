@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Test template
+<Test name="" skip="false">
+<TestClassName>test.security.messaging.SecurityTest</TestClassName>
+<Argument key="" value=""></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a message to the tester agent</HowWorkTest>
+<WhenTestPass>The tester agent receives a message before the expiration of the timeout</WhenTestPass>
+</Test>	
+-->
+
+<TestsList>
+<!-- Signature tests -->
+<Test name="Signature - Modified public key" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-key"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified (wrong) public key" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-key-wrong"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified key algorithm" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-key-algorithm"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified (unsupported) key algorithm" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-key-algorithm-wrong"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified signature" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-value"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified signature algorithm" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-algorithm"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified (unsupported) signature algorithm" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-algorithm-unknown"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Signature - Modified message" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="sign" value="true"></Argument>
+<Argument key="action" value="signature-payload"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends a signed message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+
+<!-- Encryption tests -->
+<Test name="Encryption - Modified encryption key" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="action" value="encryption-key"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Encryption - Modified (wrong size) encryption key" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="action" value="encryption-key-wrong"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Encryption - Modified encryption algorithm" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="action" value="encryption-algorithm"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Encryption - Modified encryption algorithm (not supported)" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="action" value="encryption-algorithm-unknown"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+<Test name="Encryption - Modified message payload" skip="false">
+<TestClassName>test.security.messaging.SecurityHack</TestClassName>
+<Argument key="encrypt" value="true"></Argument>
+<Argument key="action" value="encryption-payload"></Argument>
+<WhatTest></WhatTest>
+<HowWorkTest>A remote agent sends an encrypted message which is intercepted and 
+modified by the rogue service</HowWorkTest>
+<WhenTestPass>An exception occurs on the receiver side and a failure is
+returned to the sender</WhenTestPass>
+</Test>	
+</TestsList>
